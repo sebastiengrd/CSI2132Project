@@ -14,15 +14,15 @@ const client = new Client({
 app.get('/student', (req, httpRes) => {
     client.query('SELECT * FROM student;', (err, res) => {
         console.log(res["rows"]);
-        httpRes.send(res["rows"])
-    })
+        httpRes.send(res["rows"]);
+    }).catch((err) => httpRes.send(err));
 })
 
 app.get('/student/:id', (req, httpRes) => {
-    client.query(`SELECT * FROM student WHERE student_id = ${req.params.id};`, (err, res) => {
+    client.query(`SELECT * FROM student WHERE student_id = $1;`, [req.params.id], (err, res) => {
         console.log(res["rows"]);
-        httpRes.send(res["rows"])
-    })
+        httpRes.send(res["rows"]);
+    }).catch((err) => httpRes.send(err))
 })
 
 app.listen(port, () => {
