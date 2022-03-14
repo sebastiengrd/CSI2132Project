@@ -14,6 +14,9 @@ services:
     # Official Postgres image from DockerHub (we use the last version)
     image: 'postgres:9.6.24'
 
+    volumes:
+      - ./docker-entrypoint-initdb.d/:/docker-entrypoint-initdb.d/
+
     # By default, a Postgres database is running on the 5432 port.
     # If we want to access the database from our computer (outside the container),
     # we must share the port with our computer's port.
