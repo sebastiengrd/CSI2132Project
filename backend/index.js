@@ -11,18 +11,24 @@ const client = new Client({
     port: 5432,
 })
 
+function handleBasicQueryResponse(httpResponse, err, res) {
+    if (err) {
+        console.log("ERROR");
+        console.log(err);
+        httpResponse.status(400).send("Invalid Request");
+        return;
+    }
+    console.log(res["rows"])
+    httpResponse.send(res["rows"]);
+}
+
 app.get('/student', (req, httpRes) => {
-    client.query('SELECT * FROM student;', (err, res) => {
-        console.log(res["rows"]);
-        httpRes.send(res["rows"]);
-    }).catch((err) => httpRes.send(err));
+
+    client.query('SELECT * FROM student;', (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 app.get('/student/:id', (req, httpRes) => {
-    client.query(`SELECT * FROM student WHERE student_id = $1;`, [req.params.id], (err, res) => {
-        console.log(res["rows"]);
-        httpRes.send(res["rows"]);
-    }).catch((err) => httpRes.send(err))
+    client.query(`SELECT * FROM student WHERE student_id = $1;`, [req.params.id], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 app.listen(port, () => {
