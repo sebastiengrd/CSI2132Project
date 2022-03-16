@@ -3,174 +3,182 @@ CREATE TABLE IUser (
     email VARCHAR(255) NOT NULL,
     DateOfBirth DATE,
     PRIMARY KEY (username),
-    CONSTRAINT Age_Chk CHECK (EXTRACT(YEAR FROM age(DateOfBirth)) >= 18)
+    CONSTRAINT AgeChk CHECK (EXTRACT(YEAR FROM age(DateOfBirth)) >= 18)
 );
     
 CREATE TABLE Person (
-    SSN INTEGER NOT NULL UNIQUE,
+    ssn INTEGER NOT NULL UNIQUE,
     username VARCHAR(255) NOT NULL,
-    FirstName VARCHAR(255) NOT NULL,
-    MiddleName VARCHAR(255),
-    LastName VARCHAR(255) NOT NULL,
-    Gender VARCHAR(255),
-    DateOfBirth DATE NOT NULL,
-    Email VARCHAR(255) NOT NULL,
-    PhoneNumber VARCHAR(255) NOT NULL,
-    PRIMARY KEY (SSN),
-    CONSTRAINT fk_username
+    firstName VARCHAR(255) NOT NULL,
+    middleName VARCHAR(255),
+    lastName VARCHAR(255) NOT NULL,
+    gender VARCHAR(255),
+    dateOfBirth DATE NOT NULL,
+    email VARCHAR(255) NOT NULL,
+    phoneNumber VARCHAR(255) NOT NULL,
+    PRIMARY KEY (ssn),
+    CONSTRAINT fkUsername
         FOREIGN KEY (username) 
             REFERENCES IUser(username) 
                 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Patient (
-    patient_id INTEGER UNIQUE NOT NULL,
-    SSN INTEGER UNIQUE NOT NULL,
+    patientId INTEGER UNIQUE NOT NULL,
+    ssn INTEGER UNIQUE NOT NULL,
     balance NUMERIC(8,2) NOT NULL,
-    PRIMARY KEY (patient_id),
-    CONSTRAINT fk_ssn
-        FOREIGN KEY (SSN) 
-            REFERENCES Person(SSN)
+    PRIMARY KEY (patientId),
+    CONSTRAINT fkSsn
+        FOREIGN KEY (ssn) 
+            REFERENCES Person(ssn)
                 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Branch (
-    branch_id INTEGER UNIQUE NOT NULL,
+    branchId INTEGER UNIQUE NOT NULL,
     city VARCHAR(20) NOT NULL,
-    manager_id INTEGER UNIQUE NOT NULL,
-    PRIMARY KEY (branch_id)
+    managerId INTEGER UNIQUE NOT NULL,
+    PRIMARY KEY (branchId)
 );
 
-CREATE TYPE employee_role as ENUM('Dentist', 'Hygienist', 'Receptionist');
-CREATE TYPE employee_type as ENUM('Part-time', 'Full-time');
+CREATE TYPE employeeRole as ENUM('Dentist', 'Hygienist', 'Receptionist');
+CREATE TYPE employeeType as ENUM('Part-time', 'Full-time');
 
 CREATE TABLE Employee (
-    employee_id INTEGER UNIQUE NOT NULL,
-    SSN INTEGER UNIQUE NOT NULL,
+    employeeId INTEGER UNIQUE NOT NULL,
+    ssn INTEGER UNIQUE NOT NULL,
     salary NUMERIC(8,2) NOT NULL,
-    emp_role employee_role,
-    emp_type employee_type,
-    branch_id INTEGER NOT NULL,
-    PRIMARY KEY (employee_id),
-    CONSTRAINT fk_branch
-        FOREIGN KEY (branch_id) 
-            REFERENCES Branch(branch_id)
+    empRole employeeRole,
+    empType employeeType,
+    branchId INTEGER NOT NULL,
+    PRIMARY KEY (employeeId),
+    CONSTRAINT fkBranch
+        FOREIGN KEY (branchId) 
+            REFERENCES Branch(branchId)
+                ON UPDATE CASCADE ON DELETE NO ACTION,
+    CONSTRAINT fkSsn
+        FOREIGN KEY (ssn) 
+            REFERENCES Person(ssn)
                 ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
-ALTER TABLE Branch ADD CONSTRAINT fk_manager FOREIGN KEY (manager_id) REFERENCES Employee(employee_id);
+ALTER TABLE Branch ADD CONSTRAINT fkManager FOREIGN KEY (managerId) REFERENCES Employee(employeeId);
 
 CREATE TABLE Invoice (
-    invoice_id INTEGER UNIQUE NOT NULL,
+    invoiceId INTEGER UNIQUE NOT NULL,
     issueDate TIMESTAMP NOT NULL,
-    patient_charge NUMERIC(8,2) NOT NULL,
-    insur_charge NUMERIC(8,2),
-    total_fee NUMERIC(8,2),
+    patientCharge NUMERIC(8,2) NOT NULL,
+    insurCharge NUMERIC(8,2),
+    totalFee NUMERIC(8,2), -- TODO: Check back later
     discount NUMERIC(8,2),
     penalty NUMERIC(8,2),
-    PRIMARY KEY (invoice_id)
+    PRIMARY KEY (invoiceId)
 );
 
-CREATE TYPE appoint_status as ENUM('Confirmed', 'Cancelled', 'Completed');
+CREATE TYPE appointStatus as ENUM('Confirmed', 'Cancelled', 'Completed');
 CREATE TABLE Appointment (
-    appoint_id INTEGER UNIQUE NOT NULL,
-    patient_id INTEGER NOT NULL,
-    employee_id INTEGER NOT NULL,
+    appointId INTEGER UNIQUE NOT NULL,
+    patientId INTEGER NOT NULL,
+    employeeId INTEGER NOT NULL,
     date DATE NOT NULL,
     startTime TIME NOT NULL,
     endTime TIME NOT NULL,
-    appoint_type VARCHAR(255),
-    status appoint_status,
+    appointType VARCHAR(255),
+    status appointStatus,
     room INTEGER NOT NULL,
-    invoice_id INTEGER NOT NULL,
-    PRIMARY KEY (appoint_id),
-    CONSTRAINT fk_patient
-        FOREIGN KEY(patient_id)
-            REFERENCES Patient(patient_id)
+    invoiceId INTEGER NOT NULL,
+    PRIMARY KEY (appointId),
+    CONSTRAINT fkPatient
+        FOREIGN KEY(patientId)
+            REFERENCES Patient(patientId)
                 ON UPDATE CASCADE ON DELETE NO ACTION,
-    CONSTRAINT fk_employee
-        FOREIGN KEY(employee_id)
-            REFERENCES Employee(employee_id)
+    CONSTRAINT fkEmployee
+        FOREIGN KEY(employeeId)
+            REFERENCES Employee(employeeId)
                 ON UPDATE CASCADE ON DELETE NO ACTION,
-    CONSTRAINT fk_invoice
-        FOREIGN KEY(invoice_id)
-            REFERENCES Invoice(invoice_id)
+    CONSTRAINT fkInvoice
+        FOREIGN KEY(invoiceId)
+            REFERENCES Invoice(invoiceId)
                 ON UPDATE CASCADE ON DELETE NO ACTION
 );
 
 CREATE TABLE AppointmentProcedure (
-    procedure_id INTEGER UNIQUE NOT NULL,
-    appoint_id INTEGER NOT NULL,
-    procedure_code INTEGER NOT NULL,
-    fee_code INTEGER NOT NULL,
-    proc_type VARCHAR(255),
-    proc_description VARCHAR(255),
+    procedureId INTEGER UNIQUE NOT NULL,
+    appointId INTEGER NOT NULL,
+    procedureCode INTEGER NOT NULL,
+    feeCode INTEGER NOT NULL,
+    procType VARCHAR(255),
+    procDescription VARCHAR(255),
     toothInvolved VARCHAR(255) NOT NULL,
     amountOfProcedure INTEGER,
-    fee_charge NUMERIC(8,2) NOT NULL,
-    PRIMARY KEY (procedure_id),
-    CONSTRAINT fk_appointment
-        FOREIGN KEY(appoint_id)
-            REFERENCES Appointment(appoint_id)
+    feeCharge NUMERIC(8,2) NOT NULL,
+    PRIMARY KEY (procedureId),
+    CONSTRAINT fkAppointment
+        FOREIGN KEY(appointId)
+            REFERENCES Appointment(appointId)
             ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Treatment (
-    treatment_id INTEGER UNIQUE NOT NULL,
-    appoint_id INTEGER NOT NULL,
-    treat_type VARCHAR(255),
+    treatmentId INTEGER UNIQUE NOT NULL,
+    appointId INTEGER NOT NULL,
+    treatType VARCHAR(255),
     medication VARCHAR(255) NOT NULL,
     symptoms VARCHAR(255),
     tooth VARCHAR(255) NOT NULL,
     comments VARCHAR(255),
     cost NUMERIC(8,2) NOT NULL,
     note VARCHAR(255),
-    PRIMARY KEY (treatment_id),
-    CONSTRAINT fk_appointment
-        FOREIGN KEY(appoint_id)
-            REFERENCES Appointment(appoint_id)
+    PRIMARY KEY (treatmentId),
+    CONSTRAINT fkAppointment
+        FOREIGN KEY(appointId)
+            REFERENCES Appointment(appointId)
             ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Payment (
-    payment_id INTEGER UNIQUE NOT NULL,
-    patient_charge NUMERIC(8,2) NOT NULL,
-    insur_charge NUMERIC(8,2) NOT NULL,
-    total_amount NUMERIC(8,2) NOT NULL,
+    paymentId INTEGER UNIQUE NOT NULL,
+    patientCharge NUMERIC(8,2) NOT NULL,
+    insurCharge NUMERIC(8,2) NOT NULL,
+    totalAmount NUMERIC(8,2) NOT NULL, -- TODO: CHECK back later
     paymentType VARCHAR(255) NOT NULL,
-    invoice_id INTEGER NOT NULL,
-    PRIMARY KEY (payment_id),
-    CONSTRAINT fk_invoice
-        FOREIGN KEY(invoice_id)
-            REFERENCES Invoice(invoice_id)
+    invoiceId INTEGER NOT NULL,
+    PRIMARY KEY (paymentId),
+    CONSTRAINT fkInvoice
+        FOREIGN KEY(invoiceId)
+            REFERENCES Invoice(invoiceId)
                 ON UPDATE CASCADE ON DELETE CASCADE
 );
 
 CREATE TABLE Review (
-    review_id INTEGER UNIQUE NOT NULL,
-    branch_id INTEGER NOT NULL,
+    reviewId INTEGER UNIQUE NOT NULL,
+    branchId INTEGER NOT NULL,
     professionalism INTEGER NOT NULL,
     communication INTEGER NOT NULL,
     cleanliness INTEGER NOT NULL,
     serviceValue INTEGER NOT NULL,
-    patient_id INTEGER NOT NULL,
-    PRIMARY KEY (review_id),
+    patientId INTEGER NOT NULL,
+    PRIMARY KEY (reviewId),
     CHECK (professionalism <= 5 AND professionalism >= 0),
     CHECK (communication <= 5 AND communication >= 0),
     CHECK (cleanliness <= 5 AND cleanliness >= 0),
     CHECK (serviceValue <= 5 AND serviceValue >= 0),
-    CONSTRAINT fk_patient
-        FOREIGN KEY(patient_id)
-            REFERENCES Patient(patient_id)
-                ON UPDATE CASCADE ON DELETE NO ACTION
+    CONSTRAINT fkPatient
+        FOREIGN KEY(patientId)
+            REFERENCES Patient(patientId)
+                ON UPDATE CASCADE ON DELETE NO ACTION,
+    CONSTRAINT fkBranch
+        FOREIGN KEY(branchId)
+            REFERENCES Branch(branchId)
+                ON UPDATE CASCADE ON DELETE NO ACTION                
 );
 
 CREATE TABLE InsuranceClaim(
-    claim_id INTEGER UNIQUE NOT NULL,
-    payment_id INTEGER NOT NULL,
-    PRIMARY KEY (claim_id),
-    CONSTRAINT fk_payment
-        FOREIGN KEY(payment_id)
-            REFERENCES Payment(payment_id)
+    claimId INTEGER UNIQUE NOT NULL,
+    paymentId INTEGER NOT NULL,
+    PRIMARY KEY (claimId),
+    CONSTRAINT fkPayment
+        FOREIGN KEY(paymentId)
+            REFERENCES Payment(paymentId)
                 ON UPDATE CASCADE ON DELETE NO ACTION
 );
