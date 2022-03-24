@@ -41,6 +41,15 @@ services:
       - database
     build: backend/
     ports:
-      - "3000:3000"
+      - "8080:8080"
     volumes:
       - ./backend/:/backend/
+
+  frontend:
+    depends_on:
+      - database
+    build: frontend/
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./frontend/:/frontend/
