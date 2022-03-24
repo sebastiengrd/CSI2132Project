@@ -11,10 +11,6 @@ COPY yarn.lock ./
 # Production use node instead of root
 # USER node
 
-RUN yarn install --production
 
 COPY . ./
 
-RUN yarn build
-
-CMD [ "yarn", "start" ]

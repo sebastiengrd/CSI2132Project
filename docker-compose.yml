@@ -54,3 +54,5 @@ services:
     volumes:
       - ./frontend/:/frontend/
     restart: always
+
+    command: sh -c "yarn install && yarn run dev"
