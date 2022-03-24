@@ -44,3 +44,4 @@ services:
       - "3000:3000"
     volumes:
       - ./backend/:/backend/
+    restart: always
