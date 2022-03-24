@@ -1,10 +1,20 @@
-FROM node:17
+FROM node:alpine
+
+RUN mkdir -p /usr/src/app
+ENV PORT 3000
 
 WORKDIR /frontend
 
-COPY package*.json ./
+COPY package.json ./
+COPY yarn.lock ./
 
-RUN npm install
+# Production use node instead of root
+# USER node
 
-COPY . .
-CMD [ "npm", "run dev" ]
+RUN yarn install --production
+
+COPY . ./
+
+RUN yarn build
+
+CMD [ "yarn", "start" ]
