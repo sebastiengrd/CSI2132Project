@@ -44,6 +44,7 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/:/backend/
+    command: sh -c "npm install && node index.js"
 
   frontend:
     depends_on:
