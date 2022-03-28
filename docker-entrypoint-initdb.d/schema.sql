@@ -37,7 +37,7 @@ CREATE TABLE Patient (
 CREATE TABLE Branch (
     branchId INTEGER UNIQUE NOT NULL,
     city VARCHAR(20) NOT NULL,
-    managerId INTEGER UNIQUE NOT NULL,
+    managerId INTEGER UNIQUE,
     PRIMARY KEY (branchId)
 );
 
@@ -69,11 +69,24 @@ CREATE TABLE Invoice (
     issueDate TIMESTAMP NOT NULL,
     patientCharge NUMERIC(8,2) NOT NULL,
     insurCharge NUMERIC(8,2),
-    totalFee NUMERIC(8,2), -- TODO: Check back later
+    totalFee NUMERIC(8,2),
     discount NUMERIC(8,2),
     penalty NUMERIC(8,2),
     PRIMARY KEY (invoiceId)
 );
+
+-- CREATE FUNCTION computeTotalFee() RETURNS trigger AS $computeTotalFee$
+--     BEGIN
+--        UPDATE Invoice SET totalFee = NEW.patientCharge + NEW.insurCharge - NEW.discount + NEW.penalty; 
+--     END;
+-- $computeTotalFee$ LANGUAGE plpgsql;
+    
+
+-- CREATE TRIGGER calculateInvoiceTotalFee
+--     AFTER UPDATE ON Invoice
+--     FOR EACH ROW
+--     EXECUTE PROCEDURE computeTotalFee();
+
 
 CREATE TYPE appointStatus as ENUM('Confirmed', 'Cancelled', 'Completed');
 CREATE TABLE Appointment (
