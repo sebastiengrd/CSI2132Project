@@ -88,8 +88,33 @@ VALUES
     (44444, 5500003, 300, 11, 'Unknown procedure type', 'Description', 'B2', 3, 50.00);
 
 -- treatment id - length: 4
+-- treatmentId, appointId, treatType, medication, symptoms, tooth, comments, cost, note
 INSERT INTO Treatment(treatmentId, appointId, treatType, medication, symptoms, tooth, comments, cost, note)
 VALUES
     (9091, 5500000, 'Teeth Whitening', 'drugs', 'Unknown Symptoms', 'C3', 'yall are awesome', 1000.00, 'Project end of treatment: never'),
     (9094, 5500002, 'Unknown treatment type', 'pot', 'Unknown Symptoms', 'C4', 'yall are awesome', 1000.00, 'Project end of treatment: never ever'),
     (9096, 5500004, 'Teeth removal', 'water', 'Unknown Symptoms', 'C2', 'yall are awesome', 1000.00, 'Project end of treatment: never ever brother');
+
+-- payment id - length: 7
+-- paymentId, patientCharge, insurCharge, totalAmount, paymentType, invoiceId
+INSERT INTO Payment
+VALUES
+    (5001111, 300.00, 50.00, 350.00, 'Visa', 1111111),
+    (5002222, 200.00, 100.00, 300.00, 'Debit', 2222222),
+    (5003333, 100.00, 20.00, 120.00, 'Mastercard', 3333333);
+
+-- review id - length: 5
+-- reviewId, branchId, professionalism, communication, cleanliness, serviceValue, patientId
+INSERT INTO Review 
+VALUES 
+    (90000, 100, 3, 2, 4, 3, 230000),
+    (90001, 300, 5, 5, 4, 5, 230001),
+    (90002, 500, 1, 2, 1, 1, 230002);
+
+-- claim id - length: 5
+-- claimId, paymentId
+INSERT INTO InsuranceClaim
+VALUES
+    (90011, 5001111),
+    (90022, 5002222),
+    (90033, 5003333);
