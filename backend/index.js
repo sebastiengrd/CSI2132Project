@@ -27,7 +27,7 @@ app.get('/user/:username', (req, httpRes) => {
 
 app.post('/user/', (req, httpRes) => {
     payload = req.body
-    client.query(`INSERT INTO IUser VALUES ($1, $2, $3);`, [payload.username, payload.email, payload.dob], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    client.query(`INSERT INTO IUser VALUES ($1, $2, $3);`, [payload.username, payload.email, payload.dateofbirth], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 app.get('/person', (req, httpRes) => {
@@ -41,7 +41,7 @@ app.get('/person/:ssn', (req, httpRes) => {
 
 app.post('/person/', (req, httpRes) => {
     payload = req.body
-    client.query(`INSERT INTO Person VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`, [payload.ssn, payload.username, payload.firstName, payload.middleName, payload.lastName, payload.gender, payload.dob, payload.email, payload.phoneNumber], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    client.query(`INSERT INTO Person VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9);`, [payload.ssn, payload.username, payload.firstname, payload.middlename, payload.lastname, payload.gender, payload.dateofbirth, payload.email, payload.phonenumber], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 /* 
@@ -61,8 +61,8 @@ app.get('/doctor/:employeeid/appointments', (req, httpRes) => {
 /* 
     Retrieve all procedures associated to an appointment (seb)
 */
-app.get('/appointment/:appointmentid/procedures', (req, httpRes) => {
-    client.query(`SELECT * FROM appointmentprocedure WHERE appointmentid = $1;`, [req.params.appointmentid], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+app.get('/appointment/:appointId/procedures', (req, httpRes) => {
+    client.query(`SELECT * FROM appointmentprocedure WHERE appointId = $1;`, [req.params.appointId], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 
@@ -78,9 +78,17 @@ app.get('/branch/:branchId/employee', (req, httpRes) => {
  */
 app.post('/appointments/', (req, httpRes) => {
     payload = req.body
-    client.query(`INSERT INTO Appointment VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, [payload.appointmentID, payload.patientID, payload.EmployeeID, payload.date, payload.startTime, payload.endTime, payload.appointmentType, payload.status, payload.room, payload.invoiceID], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    client.query(`INSERT INTO Appointment VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10);`, [payload.appointid, payload.patientid, payload.employeeid, payload.date, payload.starttime, payload.endtime, payload.appointtype, payload.status, payload.room, payload.invoiceid], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+
+/**
+ * Add an appointment (For receptionist/admin) (loic)
+ */
+app.get('/appointments/', (req, httpRes) => {
+    payload = req.body
+    client.query(`SELECT * from Appointment;`, [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
 
 /**
  * Retrieving all treatments associated to an appointment (hened)
@@ -89,12 +97,19 @@ app.get('/appointment/:appointId/treatment', (req, httpRes) => {
     client.query('SELECT * FROM Treatment WHERE appointId = $1;', [req.params.appointId], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+
+app.get('/patient/', (req, httpRes) => {
+    payload = req.body
+    client.query('SELECT * FROM Patient;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
+
 /**
  * Add new patient (hened)
  */
 app.post('/patient/', (req, httpRes) => {
     payload = req.body
-    client.query('INSERT INTO Patient VALUES ($1, $2, $3);', [payload.patientId, payload.ssn, payload.balance], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    client.query('INSERT INTO Patient VALUES ($1, $2, $3);', [payload.patientid, payload.ssn, payload.balance], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 
