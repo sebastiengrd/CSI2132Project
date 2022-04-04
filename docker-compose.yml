@@ -28,6 +28,7 @@ services:
       - 5432:5432
     expose: 
       - 5432
+    restart: always
 
 
     environment:
@@ -44,6 +45,9 @@ services:
       - "8080:8080"
     volumes:
       - ./backend/:/backend/
+    command: sh -c "npm install && node index.js"
+    restart: always
+
 
   frontend:
     depends_on:
@@ -54,3 +58,5 @@ services:
     volumes:
       - ./frontend/:/frontend/
     restart: always
+
+    command: sh -c "yarn install && yarn run dev"
