@@ -17,7 +17,7 @@ const Receptionist: NextPage = () => {
     };
 
     fetchPatients();
-  }, [getPatients]);
+  }, []);
 
   return (
     <div>
