@@ -101,6 +101,13 @@ app.get('/appointment/:appointId/treatment', (req, httpRes) => {
 })
 
 
+/**
+ * Retrieving all treatments associated to an appointment (hened)
+ */
+app.get('/physicians/', (req, httpRes) => {
+    client.query("SELECT employeeid, salary, emprole, emptype, branchid, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Employee JOIN Person ON  Employee.ssn = Person.ssn WHERE empRole = 'Dentist' OR empRole = 'Hygienist';", [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
 app.get('/patient/', (req, httpRes) => {
     payload = req.body
     client.query('SELECT * FROM Patient;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
