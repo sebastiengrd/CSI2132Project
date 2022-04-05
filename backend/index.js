@@ -1,5 +1,6 @@
 const { Pool, Client } = require('pg')
 const express = require('express')
+const cors = require('cors')
 const app = express()
 const port = 8080
 
@@ -14,7 +15,9 @@ const client = new Client({
 })
 
 app.use(express.json()) // for parsing application/json
-
+app.use(cors({
+    origin: 'http://localhost:3000',
+}))
 
 app.get('/user', (req, httpRes) => {
 
