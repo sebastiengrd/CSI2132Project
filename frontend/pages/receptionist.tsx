@@ -17,7 +17,7 @@ const Receptionist: NextPage = () => {
     };
 
     fetchPatients();
-  }, []);
+  }, [getPatients]);
 
   return (
     <div>
@@ -30,8 +30,8 @@ const Receptionist: NextPage = () => {
       <Flex justifyContent="center" alignItems="center" w="100%" h="100vh">
         <Dashboard>
           <Stack spacing="1rem">
-            {patients.map((patient) => (
-              <Box>
+            {patients.map((patient, index) => (
+              <Box key={index}>
                 <Text>patientid: {patient.patientid}</Text>
                 <Text>ssn: {patient.ssn}</Text>
                 <Text>balance: {patient.balance}$</Text>
