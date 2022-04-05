@@ -1,7 +1,24 @@
-type Patient = {
+export type Patient = {
     patientid: number;
     ssn: number;
-    balance: number;
+    balance: string;
+};
+
+export type Physician = {
+    employeeid: number;
+    salary: string;
+    emprole: string;
+    emptype: string;
+    branchid: number;
+    username: string;
+    firstname: string;
+    middlename: string;
+    lastname: string;
+    gender: string;
+    dateofbirth: string;
+    email: string;
+    phonenumber: string;
+
 };
 
 const useApi = () => {
@@ -17,11 +34,18 @@ const useApi = () => {
         });
     }
 
+    const getPhysicians = async (): Promise<Physician[]> => {
+        return new Promise((resolve) => {
+            fetch(bindRoute("/physicians"))
+                .then((res) => res.text())
+                .then((text) => resolve(JSON.parse(text)))
+        })
+    }
+
     return {
-        getPatients
+        getPatients,
+        getPhysicians
     };
 };
 
-
 export default useApi;
-export type { Patient };

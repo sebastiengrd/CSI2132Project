@@ -4,6 +4,7 @@ import { Flex, Text, Stack, Box } from "@chakra-ui/react";
 import useApi from '../components/hooks/useApi';
 import type { Patient } from '../components/hooks/useApi';
 import { useEffect, useState } from 'react';
+import Dashboard from '../components/Dashboard';
 
 const Receptionist: NextPage = () => {
   const { getPatients } = useApi();
@@ -27,15 +28,17 @@ const Receptionist: NextPage = () => {
       </Head>
 
       <Flex justifyContent="center" alignItems="center" w="100%" h="100vh">
-        <Stack spacing="1rem">
-          {patients.map((patient) => (
-            <Box>
-              <Text>patientid: {patient.patientid}</Text>
-              <Text>ssn: {patient.ssn}</Text>
-              <Text>balance: {patient.balance}</Text>
-            </Box>
-          ))}
-        </Stack>
+        <Dashboard>
+          <Stack spacing="1rem">
+            {patients.map((patient) => (
+              <Box>
+                <Text>patientid: {patient.patientid}</Text>
+                <Text>ssn: {patient.ssn}</Text>
+                <Text>balance: {patient.balance}$</Text>
+              </Box>
+            ))}
+          </Stack>
+        </Dashboard>
       </Flex>
     </div>
   )
