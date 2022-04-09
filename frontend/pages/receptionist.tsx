@@ -1,13 +1,14 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Flex, Stack } from "@chakra-ui/react";
+import { Flex, Stack, useDisclosure } from "@chakra-ui/react";
 import useApi, { Physician } from '../components/hooks/useApi';
 import type { Patient } from '../components/hooks/useApi';
-import { useContext, useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import Dashboard from '../components/Dashboard';
 import { UserContext } from '../components/contexts/UserContext';
 import PatientCard from '../components/PatientCard';
 import EmployeeCard from '../components/EmployeeCard';
+import EditPatientModal from '../components/EditPatientModal';
 export enum ReceptionistTabs {
   Patients,
   Employees,
@@ -20,13 +21,29 @@ const Receptionist: NextPage = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [employees, setEmployees] = useState<Physician[]>([]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  
+  // modal states
+  const { isOpen: isPatientOpen, onOpen: onPatientOpen, onClose: onPatientClose } = useDisclosure();
+  const [patient, setPatient] = useState<Patient>();
+  const { isOpen: isEmployeeOpen, onOpen: onEmployeeOpen, onClose: onEmployeeClose } = useDisclosure();
+  const [employee, setEmployee] = useState<Physician>();
+  
+  const openEditPatientModal = (patient: Patient) => {
+    setPatient(patient);
+    onPatientOpen();
+  };
 
   const patientsTab = patients.map((patient, index) => (
-    <PatientCard patient={patient} key={index} />
+    <PatientCard patient={patient} key={index} onEdit={patient => openEditPatientModal(patient)} />
   ));
 
+  const openEditEmployeeModal = (employee: Physician) => {
+    setEmployee(employee);
+    onEmployeeOpen();
+  };
+
   const employeesTab = employees.map((employee, index) => (
-    <EmployeeCard employee={employee} key={index} />
+    <EmployeeCard employee={employee} key={index} onEdit={employee => openEditEmployeeModal(employee)} />
   ));
 
   useEffect(() => {
@@ -69,6 +86,11 @@ const Receptionist: NextPage = () => {
           </Stack>
         </Dashboard>
       </Flex>
+      {
+        isPatientOpen &&
+        patient &&
+        <EditPatientModal patient={patient} isOpen={isPatientOpen} onClose={onPatientClose} />
+      }
     </div>
   )
 }

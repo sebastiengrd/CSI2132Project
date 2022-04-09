@@ -4,11 +4,12 @@ import { Box, Button, Flex, Text, theme } from "@chakra-ui/react";
 import Field from "./Field";
 
 type EmployeeCardProps = {
-   employee: Physician
+   employee: Physician;
+   onEdit: (employee: Physician) => void;
 }
 
 const EmployeeCard = (props: EmployeeCardProps) => {
-   const { employee } = props;
+   const { employee, onEdit } = props;
    const [isButtonVisible, setIsButtonVisible] = useState(false);
    
     return (
@@ -27,7 +28,7 @@ const EmployeeCard = (props: EmployeeCardProps) => {
             <Field name="Phone">{employee.phonenumber}</Field>
          </Box>
          <Box>
-            <Button opacity={isButtonVisible ? 1 : 0}>Edit</Button>
+            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(employee)}>Edit</Button>
          </Box>
       </Flex>
     );

@@ -1,14 +1,15 @@
 import React, { useState } from "react";
 import { Patient } from "./hooks/useApi";
-import { Box, Button, Flex, theme } from "@chakra-ui/react";
+import { Box, Button, Flex, theme, Stack } from "@chakra-ui/react";
 import Field from "./Field";
 
 type PatientCardProps = {
    patient: Patient
+   onEdit: (patient: Patient) => void;
 }
 
 const PatientCard = (props: PatientCardProps) => {
-   const { patient } = props;
+   const { patient, onEdit } = props;
    const [isButtonVisible, setIsButtonVisible] = useState(false);
    
    return (
@@ -28,9 +29,10 @@ const PatientCard = (props: PatientCardProps) => {
             <Field name="Phone">{patient.phonenumber}</Field>
             <Field name="Balance">{patient.balance}$</Field>
          </Box>
-         <Box>
-            <Button opacity={isButtonVisible ? 1 : 0}>Edit</Button>
-         </Box>
+         <Stack>
+            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(patient)} w="100%">Edit</Button>
+            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => console.log("SETUP APPOINTMENT")} w="100%">Setup Appointment</Button>
+         </Stack>
       </Flex>
    );
 }
