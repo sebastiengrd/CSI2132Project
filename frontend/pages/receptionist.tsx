@@ -1,12 +1,13 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Flex, Text, Stack, Box } from "@chakra-ui/react";
-import useApi from '../components/hooks/useApi';
+import { Flex, Stack } from "@chakra-ui/react";
+import useApi, { Physician } from '../components/hooks/useApi';
 import type { Patient } from '../components/hooks/useApi';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import Dashboard from '../components/Dashboard';
-import { useRouter } from "next/router";
-
+import { UserContext } from '../components/contexts/UserContext';
+import PatientCard from '../components/PatientCard';
+import EmployeeCard from '../components/EmployeeCard';
 export enum ReceptionistTabs {
   Patients,
   Employees,
@@ -14,29 +15,40 @@ export enum ReceptionistTabs {
 };
 
 const Receptionist: NextPage = () => {
-  const { getPatients } = useApi();
+  const { getPatients, getPhysicians } = useApi();
+  const { logout } = useContext(UserContext);
   const [patients, setPatients] = useState<Patient[]>([]);
+  const [employees, setEmployees] = useState<Physician[]>([]);
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  const router = useRouter();
 
   const patientsTab = patients.map((patient, index) => (
-    <Box key={index}>
-      <Text>patientid: {patient.patientid}</Text>
-      <Text>ssn: {patient.ssn}</Text>
-      <Text>balance: {patient.balance}$</Text>
-    </Box>
+    <PatientCard patient={patient} key={index} />
   ));
 
-  const employeesTab = <></>;
+  const employeesTab = employees.map((employee, index) => (
+    <EmployeeCard employee={employee} key={index} />
+  ));
 
   useEffect(() => {
-    const fetchPatients = async () => {
-      const patientsList = await getPatients();
-      setPatients(patientsList);
-    };
+    if (selectedTab === ReceptionistTabs.Patients && patients.length === 0) {
+      const fetchPatients = async () => {
+        const patientsList = await getPatients();
+        setPatients(patientsList);
+      };
+      
+      fetchPatients();
+    }
 
-    fetchPatients();
-  }, []);
+    if (selectedTab === ReceptionistTabs.Employees && employees.length === 0) {
+      const fetchEmployees = async () => {
+        const employeesList = await getPhysicians();
+        setEmployees(employeesList);
+      };
+      
+      fetchEmployees();
+    }
+
+  }, [selectedTab]);
 
   return (
     <div>
@@ -46,9 +58,9 @@ const Receptionist: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex justifyContent="center" alignItems="center" w="100%" h="100vh">
+      <Flex justifyContent="center" alignItems="center" w="100%">
         <Dashboard onSelectTab={id => {
-            if (id === ReceptionistTabs.Logout) router.push("/");
+            if (id === ReceptionistTabs.Logout) logout();
             else setSelectedTab(id);
           }}>
           <Stack spacing="1rem">

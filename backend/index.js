@@ -16,7 +16,7 @@ const client = new Client({
 
 app.use(express.json()) // for parsing application/json
 app.use(cors({
-    origin: 'http://localhost:3000',
+    origin: '*',
 }))
 
 app.get('/user', (req, httpRes) => {

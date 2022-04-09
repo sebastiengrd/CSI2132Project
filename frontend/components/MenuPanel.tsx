@@ -27,7 +27,7 @@ const MenuPanel = (props: {
     })
 
     return (
-        <Stack spacing='2rem' padding="3rem"  {...stackProps}>
+        <Stack spacing='2rem' padding="3rem" {...stackProps}>
             <Flex>
                 <Heading size='lg'>Hi, {name}</Heading>
             </Flex>

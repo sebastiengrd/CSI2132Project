@@ -12,20 +12,20 @@ const Dashboard = (props: {
     const { onSelectTab, children } = props;
 
     return (
-        <Flex h="100%" w="100%">
+        <Flex w="100%">
             <Flex
                 w="450px"
-                h="100%"
+                minH="100vh"
                 background="white"
                 border={`solid 1px ${theme.colors.gray[200]}`}
             >
-                <MenuPanel onSelectTab={id => onSelectTab(id)}>
+                <MenuPanel h="100%" onSelectTab={id => onSelectTab(id)}>
                     <MenuPanelButton>Patients</MenuPanelButton>
                     <MenuPanelButton>Employees</MenuPanelButton>
                     <MenuPanelButton>Logout</MenuPanelButton>
                 </MenuPanel>
             </Flex>
-            <Flex padding="1rem" h="100%" w="100%" background="gray.100">
+            <Flex padding="1rem" minH="100vh" w="100%" background="gray.100">
                 <Container>
                     {children}
                 </Container>
