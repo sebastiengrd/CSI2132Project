@@ -22,7 +22,7 @@ export type Physician = {
 };
 
 const useApi = () => {
-    const host = "http://localhost:8080";
+    const host = "https://api.project.sebgrd.dev";
 
     const bindRoute = (route: string) => host + route;
 

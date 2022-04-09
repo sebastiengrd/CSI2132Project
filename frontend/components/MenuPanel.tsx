@@ -2,8 +2,11 @@ import React, { useState, useContext, ReactNode } from "react";
 import { Heading, Flex, StackProps, Stack } from "@chakra-ui/react";
 import { UserContext } from "./contexts/UserContext";
 
-const MenuPanel = (props: { children?: ReactNode } & StackProps) => {
-    const { children, ...stackProps } = props;
+const MenuPanel = (props: { 
+    onSelectTab: (id: number) => void;
+    children?: ReactNode
+} & StackProps) => {
+    const { onSelectTab, children, ...stackProps } = props;
     const { name } = useContext(UserContext);
     const [selectedPanelButton, setSelectedPanelButton] = useState(0);
 
@@ -15,7 +18,10 @@ const MenuPanel = (props: { children?: ReactNode } & StackProps) => {
 
     const childrenWithProps = React.Children.map(children, (child, id) => {
         if (React.isValidElement(child)) {
-            return React.cloneElement(child, { onClick: () => onClick(id), isSelected: selectedPanelButton === id });
+            return React.cloneElement(child, { onClick: () => {
+                onClick(id);
+                onSelectTab(id);
+            }, isSelected: selectedPanelButton === id });
         }
         return child;
     })

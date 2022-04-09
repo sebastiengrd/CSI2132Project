@@ -5,8 +5,11 @@ import Container from "./Container";
 import MenuPanelButton from "./MenuPanelButton";
 import theme from "./theme";
 
-const Dashboard = (props: { children?: React.ReactNode }) => {
-    const { children } = props;
+const Dashboard = (props: { 
+    onSelectTab: (id: number) => void;
+    children?: React.ReactNode
+}) => {
+    const { onSelectTab, children } = props;
 
     return (
         <Flex h="100%" w="100%">
@@ -16,7 +19,7 @@ const Dashboard = (props: { children?: React.ReactNode }) => {
                 background="white"
                 border={`solid 1px ${theme.colors.gray[200]}`}
             >
-                <MenuPanel>
+                <MenuPanel onSelectTab={id => onSelectTab(id)}>
                     <MenuPanelButton>Patients</MenuPanelButton>
                     <MenuPanelButton>Employees</MenuPanelButton>
                     <MenuPanelButton>Logout</MenuPanelButton>
