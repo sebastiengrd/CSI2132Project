@@ -122,6 +122,22 @@ app.post('/patient/', (req, httpRes) => {
     client.query('INSERT INTO Patient VALUES ($1, $2, $3);', [payload.patientid, payload.ssn, payload.balance], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+/**
+ * update the field of a patient. Can either be the patient or the person
+ */
+ app.post('/patient/update_field', (req, httpRes) => {
+    payload = req.body
+    console.log(payload.field)
+    console.log(payload.value)
+    console.log(payload.ssn)
+    if (["ssn", "username", "firstname", "middlename", "lastname", "gender", "dateofbirth", "email", "phonenumber"].includes(payload.field)) {
+        console.log("OKK")
+        client.query(`UPDATE Person SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    } else if (["patientid", "ssn", "balance"]) {
+        console.log("OKK1")
+        client.query(`UPDATE Patient SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    }
+})
 
 app.listen(port, () => {
     console.log(`Example app listening on port ${port}`);
