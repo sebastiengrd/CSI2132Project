@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import { Patient } from "./hooks/useApi";
-import { Box, Text, theme } from "@chakra-ui/react";
+import { Box, Button, Flex, theme } from "@chakra-ui/react";
+import Field from "./Field";
 
 type PatientCardProps = {
    patient: Patient
@@ -8,22 +9,30 @@ type PatientCardProps = {
 
 const PatientCard = (props: PatientCardProps) => {
    const { patient } = props;
+   const [isButtonVisible, setIsButtonVisible] = useState(false);
    
-    return (
-      <Box
+   return (
+      <Flex
          padding="1rem"
          border={`solid 1px ${theme.colors.gray[300]}`}
          borderRadius="lg"
+         onMouseOver={() => setIsButtonVisible(true)}
+         onMouseLeave={() => setIsButtonVisible(false)}
       >
-         <Text>patientid: {patient.patientid}</Text>
-         <Text>Name: {patient.patientid}</Text>
-         <Text>Birth Date: {patient.patientid}</Text>
-         <Text>Sex: {patient.patientid}</Text>
-         <Text>Email: {patient.patientid}</Text>
-         <Text>Phone: {patient.ssn}</Text>
-         <Text>balance: {patient.balance}$</Text>
-      </Box>
-    );
+         <Box w="100%">
+            <Field name="Patient Id">{patient.patientid}</Field>
+            <Field name="Name">{patient.firstname} {patient.middlename} {patient.lastname}</Field>
+            <Field name="Birth Date">{patient.dateofbirth}</Field>
+            <Field name="Sex">{patient.gender}</Field>
+            <Field name="Email">{patient.email}</Field>
+            <Field name="Phone">{patient.phonenumber}</Field>
+            <Field name="Balance">{patient.balance}$</Field>
+         </Box>
+         <Box>
+            <Button opacity={isButtonVisible ? 1 : 0}>Edit</Button>
+         </Box>
+      </Flex>
+   );
 }
 
 export default PatientCard;

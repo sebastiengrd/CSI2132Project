@@ -1,7 +1,14 @@
 export type Patient = {
     patientid: number;
-    ssn: number;
     balance: string;
+    username: string;
+    firstname: string;
+    middlename: string;
+    lastname: string;
+    gender: string;
+    dateofbirth: string;
+    email: string;
+    phonenumber: string;
 };
 
 export type Physician = {
