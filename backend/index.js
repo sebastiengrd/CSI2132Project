@@ -110,7 +110,7 @@ app.get('/physicians/', (req, httpRes) => {
 
 app.get('/patient/', (req, httpRes) => {
     payload = req.body
-    client.query('SELECT * FROM Patient;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    client.query('SELECT patientid, balance, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Patient JOIN Person ON Patient.ssn = Person.ssn;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 
