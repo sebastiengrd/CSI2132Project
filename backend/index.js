@@ -108,6 +108,18 @@ app.get('/physicians/', (req, httpRes) => {
     client.query("SELECT employeeid, Person.ssn, salary, emprole, emptype, branchid, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Employee JOIN Person ON  Employee.ssn = Person.ssn WHERE empRole = 'Dentist' OR empRole = 'Hygienist';", [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+/**
+ * update the field of a patient. Can either be the patient or the person
+ */
+app.post('/physicians/update_field', (req, httpRes) => {
+    payload = req.body
+    if (["ssn", "username", "firstname", "middlename", "lastname", "gender", "dateofbirth", "email", "phonenumber"].includes(payload.field.toLowerCase())) {
+        client.query(`UPDATE Person SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    } else if (["employeeid", "ssn", "salary", "emprole", "emptype", "branchid"].includes(payload.field.toLowerCase())) {
+        client.query(`UPDATE Employee SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+    }
+})
+
 app.get('/patient/', (req, httpRes) => {
     payload = req.body
     client.query('SELECT patientid, Person.ssn, balance, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Patient JOIN Person ON Patient.ssn = Person.ssn;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
@@ -129,7 +141,7 @@ app.post('/patient/update_field', (req, httpRes) => {
     payload = req.body
     if (["ssn", "username", "firstname", "middlename", "lastname", "gender", "dateofbirth", "email", "phonenumber"].includes(payload.field)) {
         client.query(`UPDATE Person SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
-    } else if (["patientid", "ssn", "balance"]) {
+    } else if (["patientid", "ssn", "balance"].includes(payload.field.toLowerCase())) {
         client.query(`UPDATE Patient SET ` + payload.field + ` = $1 WHERE ssn = $2;`, [payload.value, payload.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
     }
 })
