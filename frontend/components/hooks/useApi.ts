@@ -1,5 +1,6 @@
 export type Patient = {
     patientid: number;
+    ssn: number;
     balance: string;
     username: string;
     firstname: string;
@@ -13,6 +14,7 @@ export type Patient = {
 
 export type Physician = {
     employeeid: number;
+    ssn: number;
     salary: string;
     emprole: string;
     emptype: string;
@@ -25,7 +27,6 @@ export type Physician = {
     dateofbirth: string;
     email: string;
     phonenumber: string;
-
 };
 
 const useApi = () => {
