@@ -2,12 +2,12 @@ import React from "react";
 import { Heading, Stack } from "@chakra-ui/react";
 import theme from "./theme";
 
-const Container = (props: { children?: React.ReactNode }) => {
-    const { children } = props;
+const Container = (props: { title: String, children?: React.ReactNode }) => {
+    const { children, title } = props;
 
     return (
-        <Stack spacing="2rem" padding="3rem" w="100%" {...props}>
-            <Heading size="md">List of all patients</Heading>
+        <Stack spacing="2rem" padding="3rem" w="100%">
+            <Heading size="md">{title}</Heading>
             <Stack
                 background="white"
                 borderRadius="lg"

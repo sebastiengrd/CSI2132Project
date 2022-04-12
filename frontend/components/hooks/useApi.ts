@@ -86,7 +86,8 @@ export const updatePatient = async (ssn: string, field: string, value: string): 
 const useApi = () => ({
     getPatients,
     getPhysicians,
-    updatePhysician
+    updatePhysician,
+    updatePatient
 });
 
 export default useApi;

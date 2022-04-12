@@ -10,6 +10,7 @@ import PatientCard from '../components/PatientCard';
 import EmployeeCard from '../components/EmployeeCard';
 import EditPatientModal from '../components/EditPatientModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
+
 export enum ReceptionistTabs {
   Patients,
   Employees,
@@ -45,6 +46,14 @@ const Receptionist: NextPage = () => {
   const patientsTab = patients.map((patient, index) => (
     <PatientCard patient={patient} key={index} onEdit={patient => openEditPatientModal(patient)} />
   ));
+
+  const updatePatients = (patient: Patient) => {
+    const index = patients.findIndex(p => p.ssn === patient.ssn);
+    const newPatients = [...patients];
+    newPatients[index] = patient;
+    setPatients(newPatients);
+  }
+
 
   // employees
 
@@ -94,10 +103,13 @@ const Receptionist: NextPage = () => {
       </Head>
 
       <Flex justifyContent="center" alignItems="center" w="100%">
-        <Dashboard onSelectTab={id => {
-          if (id === ReceptionistTabs.Logout) logout();
-          else setSelectedTab(id);
-        }}>
+        <Dashboard
+          onSelectTab={id => {
+            if (id === ReceptionistTabs.Logout) logout();
+            else setSelectedTab(id);
+          }}
+          selectedTab={selectedTab}
+        >
           <Stack spacing="1rem">
             {selectedTab === ReceptionistTabs.Patients && patientsTab}
             {selectedTab === ReceptionistTabs.Employees && employeesTab}
@@ -111,6 +123,7 @@ const Receptionist: NextPage = () => {
           patient={patient}
           isOpen={isPatientOpen}
           onClose={onPatientClose}
+          updatePatients={(patient: Patient) => updatePatients(patient)}
         />
       }
       {
@@ -123,7 +136,7 @@ const Receptionist: NextPage = () => {
           updateEmployees={(employee: Physician) => updateEmployees(employee)}
         />
       }
-    </div>
+    </div >
   )
 }
 

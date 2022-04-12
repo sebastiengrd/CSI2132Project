@@ -4,12 +4,14 @@ import MenuPanel from "./MenuPanel";
 import Container from "./Container";
 import MenuPanelButton from "./MenuPanelButton";
 import theme from "./theme";
+import { ReceptionistTabs } from "../pages/receptionist";
 
-const Dashboard = (props: { 
-    onSelectTab: (id: number) => void;
+const Dashboard = (props: {
+    onSelectTab: (id: number) => void,
+    selectedTab: ReceptionistTabs,
     children?: React.ReactNode
 }) => {
-    const { onSelectTab, children } = props;
+    const { onSelectTab, selectedTab, children } = props;
 
     return (
         <Flex w="100%">
@@ -26,7 +28,9 @@ const Dashboard = (props: {
                 </MenuPanel>
             </Flex>
             <Flex padding="1rem" minH="100vh" w="100%" background="gray.100">
-                <Container>
+                <Container
+                    title={selectedTab === ReceptionistTabs.Employees ? "List of all employees" : "List of all patients"}
+                >
                     {children}
                 </Container>
             </Flex>
