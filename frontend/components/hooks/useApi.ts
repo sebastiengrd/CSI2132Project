@@ -1,6 +1,6 @@
 export type Patient = {
-    patientid: number;
-    ssn: number;
+    patientid: string;
+    ssn: string;
     balance: string;
     username: string;
     firstname: string;
@@ -13,12 +13,12 @@ export type Patient = {
 };
 
 export type Physician = {
-    employeeid: number;
-    ssn: number;
+    employeeid: string;
+    ssn: string;
     salary: string;
     emprole: string;
     emptype: string;
-    branchid: number;
+    branchid: string;
     username: string;
     firstname: string;
     middlename: string;
@@ -29,31 +29,64 @@ export type Physician = {
     phonenumber: string;
 };
 
-const useApi = () => {
-    const host = "https://api.project.sebgrd.dev";
+const host = "https://api.project.sebgrd.dev";
 
-    const bindRoute = (route: string) => host + route;
+const bindRoute = (route: string) => host + route;
 
-    const getPatients = async (): Promise<Patient[]> => {
-        return new Promise((resolve) => {
-            fetch(bindRoute("/patient/"))
-                .then((res) => res.text())
-                .then((text) => resolve(JSON.parse(text)))
-        });
-    }
-
-    const getPhysicians = async (): Promise<Physician[]> => {
-        return new Promise((resolve) => {
-            fetch(bindRoute("/physicians"))
-                .then((res) => res.text())
-                .then((text) => resolve(JSON.parse(text)))
-        })
-    }
-
-    return {
-        getPatients,
-        getPhysicians
-    };
+export const getPatients = async (): Promise<Patient[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/patient/"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    });
 };
+
+export const getPhysicians = async (): Promise<Physician[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/physicians"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    })
+};
+
+export const updatePhysician = async (ssn: string, field: string, value: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/physicians/update_field/"), {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ssn,
+                field,
+                value
+            })
+        })
+            .then(res => resolve(res.status === 200))
+    })
+};
+
+export const updatePatient = async (ssn: string, field: string, value: string): Promise<boolean> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/patient/update_field/"), {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                ssn,
+                field,
+                value
+            })
+        })
+            .then(res => resolve(res.status === 200))
+    })
+};
+
+const useApi = () => ({
+    getPatients,
+    getPhysicians,
+    updatePhysician
+});
 
 export default useApi;

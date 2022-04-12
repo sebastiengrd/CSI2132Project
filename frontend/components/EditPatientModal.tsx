@@ -14,20 +14,20 @@ import { Patient } from "./hooks/useApi";
 export type EditPatientModalProps = {
    patient: Patient;
    isOpen: boolean;
-   onClose: () => void;
+   onClose: () => void;
 }
 
-const EditPatientModal = (props: EditPatientModalProps) => {
-   const { isOpen, onClose } = props;
+const EditPatientModal = (props: EditPatientModalProps) => {
+   const { isOpen, onClose, patient } = props;
 
    return (
       <Modal isOpen={isOpen} onClose={onClose}>
          <ModalOverlay />
          <ModalContent>
-            <ModalHeader>Modal Title</ModalHeader>
+            <ModalHeader>Edit {patient.firstname}'s profile</ModalHeader>
             <ModalCloseButton />
             <ModalBody>
-               Yo
+
             </ModalBody>
 
             <ModalFooter>
@@ -38,7 +38,7 @@ const EditPatientModal = (props: EditPatientModalProps) => {
             </ModalFooter>
          </ModalContent>
       </Modal>
-  )
+   )
 }
 
 export default EditPatientModal;

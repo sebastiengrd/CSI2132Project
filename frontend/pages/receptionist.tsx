@@ -9,6 +9,7 @@ import { UserContext } from '../components/contexts/UserContext';
 import PatientCard from '../components/PatientCard';
 import EmployeeCard from '../components/EmployeeCard';
 import EditPatientModal from '../components/EditPatientModal';
+import EditEmployeeModal from '../components/EditEmployeeModal';
 export enum ReceptionistTabs {
   Patients,
   Employees,
@@ -18,16 +19,24 @@ export enum ReceptionistTabs {
 const Receptionist: NextPage = () => {
   const { getPatients, getPhysicians } = useApi();
   const { logout } = useContext(UserContext);
+
   const [patients, setPatients] = useState<Patient[]>([]);
+  patients.sort((p1, p2) => parseInt(p1.patientid) - parseInt(p2.patientid));
+
   const [employees, setEmployees] = useState<Physician[]>([]);
+  employees.sort((e1, e2) => parseInt(e1.employeeid) - parseInt(e2.employeeid));
+
   const [selectedTab, setSelectedTab] = useState<number>(0);
-  
+
   // modal states
+
   const { isOpen: isPatientOpen, onOpen: onPatientOpen, onClose: onPatientClose } = useDisclosure();
   const [patient, setPatient] = useState<Patient>();
   const { isOpen: isEmployeeOpen, onOpen: onEmployeeOpen, onClose: onEmployeeClose } = useDisclosure();
   const [employee, setEmployee] = useState<Physician>();
-  
+
+  // patients
+
   const openEditPatientModal = (patient: Patient) => {
     setPatient(patient);
     onPatientOpen();
@@ -36,6 +45,8 @@ const Receptionist: NextPage = () => {
   const patientsTab = patients.map((patient, index) => (
     <PatientCard patient={patient} key={index} onEdit={patient => openEditPatientModal(patient)} />
   ));
+
+  // employees
 
   const openEditEmployeeModal = (employee: Physician) => {
     setEmployee(employee);
@@ -46,13 +57,20 @@ const Receptionist: NextPage = () => {
     <EmployeeCard employee={employee} key={index} onEdit={employee => openEditEmployeeModal(employee)} />
   ));
 
+  const updateEmployees = (employee: Physician) => {
+    const index = employees.findIndex(e => e.ssn === employee.ssn);
+    const newEmployees = [...employees];
+    newEmployees[index] = employee;
+    setEmployees(newEmployees);
+  }
+
   useEffect(() => {
     if (selectedTab === ReceptionistTabs.Patients && patients.length === 0) {
       const fetchPatients = async () => {
         const patientsList = await getPatients();
         setPatients(patientsList);
       };
-      
+
       fetchPatients();
     }
 
@@ -61,7 +79,7 @@ const Receptionist: NextPage = () => {
         const employeesList = await getPhysicians();
         setEmployees(employeesList);
       };
-      
+
       fetchEmployees();
     }
 
@@ -77,9 +95,9 @@ const Receptionist: NextPage = () => {
 
       <Flex justifyContent="center" alignItems="center" w="100%">
         <Dashboard onSelectTab={id => {
-            if (id === ReceptionistTabs.Logout) logout();
-            else setSelectedTab(id);
-          }}>
+          if (id === ReceptionistTabs.Logout) logout();
+          else setSelectedTab(id);
+        }}>
           <Stack spacing="1rem">
             {selectedTab === ReceptionistTabs.Patients && patientsTab}
             {selectedTab === ReceptionistTabs.Employees && employeesTab}
@@ -89,7 +107,21 @@ const Receptionist: NextPage = () => {
       {
         isPatientOpen &&
         patient &&
-        <EditPatientModal patient={patient} isOpen={isPatientOpen} onClose={onPatientClose} />
+        <EditPatientModal
+          patient={patient}
+          isOpen={isPatientOpen}
+          onClose={onPatientClose}
+        />
+      }
+      {
+        isEmployeeOpen &&
+        employee &&
+        <EditEmployeeModal
+          employee={employee}
+          isOpen={isEmployeeOpen}
+          onClose={onEmployeeClose}
+          updateEmployees={(employee: Physician) => updateEmployees(employee)}
+        />
       }
     </div>
   )
