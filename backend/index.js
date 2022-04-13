@@ -62,8 +62,10 @@ app.get('/doctor/:employeeid/appointments', (req, httpRes) => {
     client.query(`SELECT appointid, Appointment.patientid,  date, starttime, endtime, appointtype, status, room, invoiceid, balance, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM (Appointment JOIN Patient on Appointment.patientId = Patient.patientId) JOIN Person on Patient.ssn = Person.ssn  WHERE employeeid = $1;`, [req.params.employeeid], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+
+
 /* 
-    Retrieve all procedures associated to an appointment (seb)
+Retrieve all procedures associated to an appointment (seb)
 */
 app.get('/appointment/:appointId/procedures', (req, httpRes) => {
     client.query(`SELECT * FROM appointmentprocedure WHERE appointId = $1;`, [req.params.appointId], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
@@ -121,6 +123,17 @@ app.get('/patient/', (req, httpRes) => {
 app.post('/patient/', (req, httpRes) => {
     payload = req.body
     client.query('INSERT INTO Patient VALUES ($1, $2, $3);', [payload.patientid, payload.ssn, payload.balance], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
+/* 
+    select all the Procedures of a Patient
+*/
+app.get('/patient/:ssn/procedures', (req, httpRes) => {
+    client.query(`SELECT Appointment.appointid, Patient.patientid, employeeid, Appointment.date, appointtype, proctype, procdescription, toothinvolved, feecharge from (((appointment JOIN Patient ON Patient.patientid = appointment.patientid)
+    	JOIN Person ON Person.ssn = Patient.ssn ) 
+    	JOIN AppointmentProcedure ON Appointment.appointid = AppointmentProcedure.appointid)
+    	WHERE Patient.ssn = $1;
+    `, [req.params.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
 /**
