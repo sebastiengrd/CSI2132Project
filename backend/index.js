@@ -115,7 +115,7 @@ app.get('/physicians/', (req, httpRes) => {
  * Retrieving all appointments of a physician
  */
 app.get('/physicians/:ssn/appointemnts', (req, httpRes) => {
-    client.query(`SELECT Patient.patientid, Patient.ssn, Employee.employeeid, date, starttime, endtime, appointtype, status, room, invoiceid, balance, username, firstname, lastname, gender, dateofbirth, email, phonenumber  from Appointment 
+    client.query(`SELECT DISTINCT Patient.patientid, Patient.ssn, Employee.employeeid, date, starttime, endtime, appointtype, status, room, invoiceid, balance, username, firstname, lastname, gender, dateofbirth, email, phonenumber  from Appointment 
 	JOIN Employee ON Employee.employeeid = Appointment.employeeid
 	JOIN Patient ON Appointment.patientid = Patient.patientid
 	JOIN Person ON Patient.ssn = Person.ssn 
@@ -127,7 +127,7 @@ app.get('/physicians/:ssn/appointemnts', (req, httpRes) => {
  * Retrieving all appointments of a physician
  */
 app.get('/physicians/:ssn/patients', (req, httpRes) => {
-    client.query(`SELECT Patient.patientid, Patient.ssn, balance, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Patient Join Person ON Patient.ssn = Person.ssn
+    client.query(`SELECT DISTINCT Patient.patientid, Patient.ssn, balance, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber FROM Patient Join Person ON Patient.ssn = Person.ssn
 	JOIN Appointment ON Appointment.patientid = Patient.patientid
 	WHERE Appointment.employeeid = (SELECT employeeid FROM Employee where Employee.ssn = $1);`, [req.params.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
@@ -152,7 +152,7 @@ app.post('/patient/', (req, httpRes) => {
 */
 app.get('/patient/:ssn/procedures', (req, httpRes) => {
 
-    client.query(`SELECT Appointment.appointid, Patient.patientid, employeeid, Appointment.date, appointtype, proctype, procdescription, toothinvolved, feecharge from (((appointment JOIN Patient ON Patient.patientid = appointment.patientid)
+    client.query(`SELECT DISTINCT Appointment.appointid, Patient.patientid, employeeid, Appointment.date, appointtype, proctype, procdescription, toothinvolved, feecharge from (((appointment JOIN Patient ON Patient.patientid = appointment.patientid)
     	JOIN Person ON Person.ssn = Patient.ssn ) 
     	JOIN AppointmentProcedure ON Appointment.appointid = AppointmentProcedure.appointid)
     	WHERE Patient.ssn = $1;
