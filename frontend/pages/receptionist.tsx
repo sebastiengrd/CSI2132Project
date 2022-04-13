@@ -10,6 +10,7 @@ import PatientCard from '../components/PatientCard';
 import EmployeeCard from '../components/EmployeeCard';
 import EditPatientModal from '../components/EditPatientModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
+import BookAppointmentModal from '../components/BookAppointmentModal';
 
 export enum ReceptionistTabs {
   Patients,
@@ -35,6 +36,7 @@ const Receptionist: NextPage = () => {
   const [patient, setPatient] = useState<Patient>();
   const { isOpen: isEmployeeOpen, onOpen: onEmployeeOpen, onClose: onEmployeeClose } = useDisclosure();
   const [employee, setEmployee] = useState<Physician>();
+  const { isOpen: isBookAppointmentOpen, onOpen: onBookAppointmentOpen, onClose: onBookAppointmentClose } = useDisclosure();
 
   // patients
 
@@ -43,8 +45,17 @@ const Receptionist: NextPage = () => {
     onPatientOpen();
   };
 
+  const openBookAppointmentModal = (patient: Patient) => {
+    setPatient(patient);
+    onBookAppointmentOpen();
+  };
+
   const patientsTab = patients.map((patient, index) => (
-    <PatientCard patient={patient} key={index} onEdit={patient => openEditPatientModal(patient)} />
+    <PatientCard
+      patient={patient}
+      key={index}
+      onEdit={patient => openEditPatientModal(patient)}
+      onBookAppointment={patient => openBookAppointmentModal(patient)} />
   ));
 
   const updatePatients = (patient: Patient) => {
@@ -53,7 +64,6 @@ const Receptionist: NextPage = () => {
     newPatients[index] = patient;
     setPatients(newPatients);
   }
-
 
   // employees
 
@@ -134,6 +144,15 @@ const Receptionist: NextPage = () => {
           isOpen={isEmployeeOpen}
           onClose={onEmployeeClose}
           updateEmployees={(employee: Physician) => updateEmployees(employee)}
+        />
+      }
+      {
+        isBookAppointmentOpen &&
+        patient &&
+        <BookAppointmentModal
+          patient={patient}
+          isOpen={isBookAppointmentOpen}
+          onClose={onBookAppointmentClose}
         />
       }
     </div >

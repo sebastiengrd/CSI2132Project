@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Physician } from "./hooks/useApi";
-import { Box, Button, Flex, Text, theme } from "@chakra-ui/react";
+import { Box, Button, Flex, theme } from "@chakra-ui/react";
 import Field from "./Field";
 
 type EmployeeCardProps = {
@@ -11,8 +11,8 @@ type EmployeeCardProps = {
 const EmployeeCard = (props: EmployeeCardProps) => {
    const { employee, onEdit } = props;
    const [isButtonVisible, setIsButtonVisible] = useState(false);
-   
-    return (
+
+   return (
       <Flex
          padding="1rem"
          border={`solid 1px ${theme.colors.gray[300]}`}
@@ -31,7 +31,7 @@ const EmployeeCard = (props: EmployeeCardProps) => {
             <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(employee)}>Edit</Button>
          </Box>
       </Flex>
-    );
+   );
 }
 
 export default EmployeeCard;

@@ -6,12 +6,13 @@ import Field from "./Field";
 type PatientCardProps = {
    patient: Patient
    onEdit: (patient: Patient) => void;
+   onBookAppointment: (patient: Patient) => void;
 }
 
 const PatientCard = (props: PatientCardProps) => {
-   const { patient, onEdit } = props;
+   const { patient, onEdit, onBookAppointment } = props;
    const [isButtonVisible, setIsButtonVisible] = useState(false);
-   
+
    return (
       <Flex
          padding="1rem"
@@ -30,8 +31,8 @@ const PatientCard = (props: PatientCardProps) => {
             <Field name="Balance">{patient.balance}$</Field>
          </Box>
          <Stack>
-            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(patient)} w="100%">Edit</Button>
-            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => console.log("SETUP APPOINTMENT")} w="100%">Setup Appointment</Button>
+            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(patient)}>Edit</Button>
+            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onBookAppointment(patient)}>Setup Appointment</Button>
          </Stack>
       </Flex>
    );

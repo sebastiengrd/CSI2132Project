@@ -29,6 +29,19 @@ export type Physician = {
     phonenumber: string;
 };
 
+export type Appointment = {
+    patientid: string;
+    employeeid: string;
+    date: string;
+    starttime: string;
+    endtime: string;
+    appointtype: string;
+    status: string;
+    room: string;
+    invoiceid: string;
+};
+
+
 const host = "https://api.project.sebgrd.dev";
 
 const bindRoute = (route: string) => host + route;
@@ -82,6 +95,20 @@ export const updatePatient = async (ssn: string, field: string, value: string): 
             .then(res => resolve(res.status === 200))
     })
 };
+
+export const bookAppointment = async (appointment: Appointment): Promise<boolean> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/appointments/"), {
+            method: "POST",
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(appointment)
+        })
+            .then(res => resolve(res.status === 200))
+    })
+};
+
 
 const useApi = () => ({
     getPatients,
