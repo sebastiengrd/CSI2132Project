@@ -1,8 +1,21 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Flex } from "@chakra-ui/react";
+import { Flex, Stack } from "@chakra-ui/react";
+import Dashboard from '../components/Dashboard';
+import { UserContext } from '../components/contexts/UserContext';
+import React, { useContext, useState } from 'react';
+
+export enum PatientTabs {
+  ScheduleAppointment,
+  MedicalHistory,
+  Logout
+};
 
 const Patient: NextPage = () => {
+  const { logout } = useContext(UserContext);
+
+  const [selectedTab, setSelectedTab] = useState<number>(0);
+
   return (
     <div>
       <Head>
@@ -11,9 +24,23 @@ const Patient: NextPage = () => {
         <link rel="icon" href="/favicon.ico" />
       </Head>
 
-      <Flex justifyContent="center" alignItems="center" w="100%" h="100vh">
+      <Flex justifyContent="center" alignItems="center" w="100%">
+        <Dashboard
+          onSelectTab={id => {
+            if (id === PatientTabs.Logout) logout();
+            else setSelectedTab(id);
+          }}
+          selectedTab={selectedTab}
+          menuPanelButtons={["Schedule Appointment", "Medical History", "Logout"]}
+          titles={["Your upcoming appointments", "Your medical history"]}
+        >
+          <Stack spacing="1rem">
+            {selectedTab === PatientTabs.ScheduleAppointment && "Schedule Appointment"}
+            {selectedTab === PatientTabs.MedicalHistory && "Medical History"}
+          </Stack>
+        </Dashboard>
       </Flex>
-    </div>
+    </div >
   )
 }
 

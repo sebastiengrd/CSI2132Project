@@ -11,6 +11,7 @@ import EmployeeCard from '../components/EmployeeCard';
 import EditPatientModal from '../components/EditPatientModal';
 import EditEmployeeModal from '../components/EditEmployeeModal';
 import BookAppointmentModal from '../components/BookAppointmentModal';
+import MenuPanelButton from '../components/MenuPanelButton';
 
 export enum ReceptionistTabs {
   Patients,
@@ -119,6 +120,12 @@ const Receptionist: NextPage = () => {
             else setSelectedTab(id);
           }}
           selectedTab={selectedTab}
+          menuPanelButtons={[
+            "Patients",
+            "Employees",
+            "Logout"
+          ]}
+          titles={["List of all employees", "List of all patients"]}
         >
           <Stack spacing="1rem">
             {selectedTab === ReceptionistTabs.Patients && patientsTab}
