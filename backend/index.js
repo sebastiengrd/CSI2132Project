@@ -159,6 +159,17 @@ app.get('/patient/:ssn/procedures', (req, httpRes) => {
     `, [req.params.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+/* 
+    select all the Procedures of a Patient
+*/
+app.get('/patient/:ssn/appointments', (req, httpRes) => {
+
+    client.query(`SELECT Patient.patientid, Person.ssn, balance, username, firstname, middlename, lastname, gender, dateofbirth, email, phonenumber, Appointment.employeeid, date, starttime, endtime, appointtype, status, room, invoiceid FROM Appointment 
+	JOIN Patient ON Appointment.patientid = Patient.patientid
+	JOIN Person ON Patient.ssn = Person.ssn WHERE Patient.ssn = $1;
+    `, [req.params.ssn], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
 /**
  * update the field of a patient. Can either be the patient or the person
  */
