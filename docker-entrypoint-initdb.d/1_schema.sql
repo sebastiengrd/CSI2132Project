@@ -99,7 +99,7 @@ CREATE TABLE Appointment (
     appointType VARCHAR(255),
     status appointStatus,
     room INTEGER NOT NULL,
-    invoiceId INTEGER NOT NULL,
+    invoiceId INTEGER,
     PRIMARY KEY (appointId),
     CONSTRAINT fkPatient
         FOREIGN KEY(patientId)
