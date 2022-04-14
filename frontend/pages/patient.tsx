@@ -7,6 +7,7 @@ import React, { useContext, useState, useEffect } from 'react';
 import MedicalHistory from '../components/MedicalHistory';
 import { AppointmentExtended, getAppointmentsForPatient } from '../components/hooks/useApi';
 
+
 export enum PatientTabs {
   ScheduleAppointment,
   MedicalHistory,
@@ -14,7 +15,7 @@ export enum PatientTabs {
 };
 
 const Patient: NextPage = () => {
-  const { logout } = useContext(UserContext);
+  const { setName, logout } = useContext(UserContext);
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [appointmentsForPerson, setAppointmentsForPerson] = useState<AppointmentExtended[]>([]);
@@ -25,7 +26,8 @@ const Patient: NextPage = () => {
         .then(a => setAppointmentsForPerson(a))
     }
     fetchAppointmentsForPatient();
-  }, []);
+    setName("John Smith")
+  }, [setName]);
 
   // const appointmentTab = appointmentsForPerson.map((appointment, index) => (
   //   // <Box>
@@ -37,7 +39,6 @@ const Patient: NextPage = () => {
   const appointmentTab = appointmentsForPerson.map((appointment, index) => {
     const { firstname, date, starttime, endtime, lastname, room, ssn } = appointment;
     const fullName = `${firstname} ${lastname}`;
-    const appointmentLength = ((new Date(endtime).getTime() - new Date(starttime).getTime()) / 1000 / 60).toFixed(2);
 
     return (
       <Stack padding="1rem" borderRadius="lg" border={`solid 1px ${theme.colors.gray[200]}`} spacing="1.25rem" key={`appointment-card-${index}`}>
@@ -51,12 +52,12 @@ const Patient: NextPage = () => {
             <Text>{date}</Text>
           </Box>
           <Box>
-            <Text fontWeight={600}>Time</Text>
+            <Text fontWeight={600}>From</Text>
             <Text>{starttime}</Text>
           </Box>
           <Box>
-            <Text fontWeight={600}>Length</Text>
-            <Text>{`${appointmentLength} hr(s)`}</Text>
+            <Text fontWeight={600}>To</Text>
+            <Text>{endtime}</Text>
           </Box>
           <Box>
             <Text fontWeight={600}>Room</Text>

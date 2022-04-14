@@ -21,7 +21,7 @@ export enum ReceptionistTabs {
 
 const Receptionist: NextPage = () => {
   const { getPatients, getPhysicians } = useApi();
-  const { logout } = useContext(UserContext);
+  const { logout, setName } = useContext(UserContext);
 
   const [patients, setPatients] = useState<Patient[]>([]);
   patients.sort((p1, p2) => parseInt(p1.patientid) - parseInt(p2.patientid));
@@ -103,7 +103,7 @@ const Receptionist: NextPage = () => {
 
       fetchEmployees();
     }
-
+    setName("Admin");
   }, [selectedTab]);
 
   return (

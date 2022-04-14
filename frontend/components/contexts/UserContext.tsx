@@ -3,6 +3,7 @@ import router from "next/router";
 
 export type UserContextType = {
     name: string
+    setName: React.Dispatch<React.SetStateAction<string>>
     logout: () => void;
 }
 
@@ -14,7 +15,7 @@ const UserProvider = ({ children }) => {
     const logout = () => router.push("/");
     
     return (
-        <UserContext.Provider value={{ name, logout }}>
+        <UserContext.Provider value={{ name, setName, logout }}>
             {children}
         </UserContext.Provider>
     );

@@ -14,7 +14,7 @@ export enum DentistTabs {
 };
 
 const Dentist: NextPage = () => {
-  const { logout } = useContext(UserContext);
+  const { logout, setName } = useContext(UserContext);
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
   const [patientsForDentist, setPatientsForDentist] = useState<Patient[]>([]);
@@ -36,10 +36,11 @@ const Dentist: NextPage = () => {
         .then(p => setAppointmentsForDentist(p))
     }
     fetchAppointmentsForDentist();
-  }, []);
+    setName("Pol");
+  }, [setName]);
 
   const patientsTab = patientsForDentist.map((patient, index) => (
-    <Box>
+    <Box key={index}>
       <Text>{patient.firstname}</Text>
       <MedicalHistory ssn={patient.ssn} />
     </Box>
@@ -48,7 +49,7 @@ const Dentist: NextPage = () => {
   const appointmentTab = appointmentsForDentist.map((appointment, index) => {
     const fullName = `${appointment.firstname} ${appointment.middlename ?? ""} ${appointment.lastname}`;
     return (
-      <Stack padding="1rem" borderRadius="lg" border={`solid 1px ${theme.colors.gray[200]}`} spacing="1.25rem">
+      <Stack key={index} padding="1rem" borderRadius="lg" border={`solid 1px ${theme.colors.gray[200]}`} spacing="1.25rem">
         <Stack direction="row" spacing="1.25rem">
           <Box>
             <Text fontWeight={600}>Patient</Text>
