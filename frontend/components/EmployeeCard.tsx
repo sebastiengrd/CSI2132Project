@@ -10,15 +10,12 @@ type EmployeeCardProps = {
 
 const EmployeeCard = (props: EmployeeCardProps) => {
    const { employee, onEdit } = props;
-   const [isButtonVisible, setIsButtonVisible] = useState(false);
 
    return (
       <Flex
          padding="1rem"
          border={`solid 1px ${theme.colors.gray[200]}`}
          borderRadius="lg"
-         onMouseOver={() => setIsButtonVisible(true)}
-         onMouseLeave={() => setIsButtonVisible(false)}
       >
          <Box w="100%">
             <Field name="Employee Id">{employee.employeeid}</Field>
@@ -28,7 +25,7 @@ const EmployeeCard = (props: EmployeeCardProps) => {
             <Field name="Phone">{employee.phonenumber}</Field>
          </Box>
          <Box>
-            <Button opacity={isButtonVisible ? 1 : 0} onClick={() => onEdit(employee)}>Edit</Button>
+            <Button onClick={() => onEdit(employee)}>Edit</Button>
          </Box>
       </Flex>
    );
