@@ -1,9 +1,11 @@
+import React, { useContext, useEffect, useState } from 'react';
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Flex, Stack } from "@chakra-ui/react";
 import Dashboard from '../components/Dashboard';
 import { UserContext } from '../components/contexts/UserContext';
-import React, { useContext, useState } from 'react';
+import { Box, Flex, Stack, Text, theme } from "@chakra-ui/react";
+import { getPatientsForPhycisian, getAppointmentsForPhycisian, Patient, AppointmentExtended } from '../components/hooks/useApi';
+import MedicalHistory from '../components/MedicalHistory';
 
 export enum DentistTabs {
   ScheduleAppointment,
@@ -15,7 +17,63 @@ const Dentist: NextPage = () => {
   const { logout } = useContext(UserContext);
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [patientsForDentist, setPatientsForDentist] = useState<Patient[]>([]);
+  const [appointmentsForDentist, setAppointmentsForDentist] = useState<AppointmentExtended[]>([]);
 
+
+
+  useEffect(() => {
+    const fetchPatientsForDentist = async () => {
+      getPatientsForPhycisian("111111118")
+        .then(p => setPatientsForDentist(p))
+    }
+    fetchPatientsForDentist();
+  }, []);
+
+  useEffect(() => {
+    const fetchAppointmentsForDentist = async () => {
+      getAppointmentsForPhycisian("111111118")
+        .then(p => setAppointmentsForDentist(p))
+    }
+    fetchAppointmentsForDentist();
+  }, []);
+
+  const patientsTab = patientsForDentist.map((patient, index) => (
+    <Box>
+      <Text>{patient.firstname}</Text>
+      <MedicalHistory ssn={patient.ssn} />
+    </Box>
+  ));
+
+  const appointmentTab = appointmentsForDentist.map((appointment, index) => {
+    const fullName = `${appointment.firstname} ${appointment.middlename ?? ""} ${appointment.lastname}`;
+    return (
+      <Stack padding="1rem" borderRadius="lg" border={`solid 1px ${theme.colors.gray[200]}`} spacing="1.25rem">
+        <Stack direction="row" spacing="1.25rem">
+          <Box>
+            <Text fontWeight={600}>Patient</Text>
+            <Text>{fullName}</Text>
+          </Box>
+          <Box>
+            <Text fontWeight={600}>Gender</Text>
+            <Text>{appointment.gender}</Text>
+          </Box>
+          <Box>
+            <Text fontWeight={600}>Email</Text>
+            <Text>{appointment.email}</Text>
+          </Box>
+          <Box>
+            <Text fontWeight={600}>Phone number</Text>
+            <Text>{appointment.phonenumber}</Text>
+          </Box>
+        </Stack>
+        <Box>
+          <Text fontWeight={600} fontSize="lg">Medical history of {fullName}</Text>
+          <MedicalHistory ssn={appointment.ssn} />
+        </Box>
+      </Stack>
+    );
+  });
 
   return (
     <div>
@@ -36,8 +94,8 @@ const Dentist: NextPage = () => {
           titles={["Your upcoming appointments", "Your patients"]}
         >
           <Stack spacing="1rem">
-            {selectedTab === DentistTabs.ScheduleAppointment && "Appointments"}
-            {selectedTab === DentistTabs.MedicalHistory && "Patients"}
+            {selectedTab === DentistTabs.ScheduleAppointment && appointmentTab}
+            {selectedTab === DentistTabs.MedicalHistory && patientsTab}
           </Stack>
         </Dashboard>
       </Flex>

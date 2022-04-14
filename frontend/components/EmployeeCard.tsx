@@ -15,7 +15,7 @@ const EmployeeCard = (props: EmployeeCardProps) => {
    return (
       <Flex
          padding="1rem"
-         border={`solid 1px ${theme.colors.gray[300]}`}
+         border={`solid 1px ${theme.colors.gray[200]}`}
          borderRadius="lg"
          onMouseOver={() => setIsButtonVisible(true)}
          onMouseLeave={() => setIsButtonVisible(false)}

@@ -56,7 +56,8 @@ const Receptionist: NextPage = () => {
       patient={patient}
       key={index}
       onEdit={patient => openEditPatientModal(patient)}
-      onBookAppointment={patient => openBookAppointmentModal(patient)} />
+      onBookAppointment={patient => openBookAppointmentModal(patient)}
+    />
   ));
 
   const updatePatients = (patient: Patient) => {
@@ -120,11 +121,7 @@ const Receptionist: NextPage = () => {
             else setSelectedTab(id);
           }}
           selectedTab={selectedTab}
-          menuPanelButtons={[
-            "Patients",
-            "Employees",
-            "Logout"
-          ]}
+          menuPanelButtons={["Patients", "Employees", "Logout"]}
           titles={["List of all employees", "List of all patients"]}
         >
           <Stack spacing="1rem">

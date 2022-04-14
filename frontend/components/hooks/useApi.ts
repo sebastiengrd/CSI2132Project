@@ -41,6 +41,21 @@ export type Appointment = {
     invoiceid: string;
 };
 
+export type AppointmentExtended = Appointment & Patient
+
+
+export type Procedures = {
+    appointid: String,
+    patientid: String,
+    employeeid: String,
+    date: String,
+    appointtype: String,
+    proctype: String,
+    procdescription: String,
+    toothinvolved: String,
+    feecharge: String
+};
+
 
 const host = "https://api.project.sebgrd.dev";
 
@@ -61,6 +76,39 @@ export const getPhysicians = async (): Promise<Physician[]> => {
             .then((text) => resolve(JSON.parse(text)))
     })
 };
+
+export const getProceduresForPatient = async (ssn: string): Promise<Procedures[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/patient/" + ssn + "/procedures/"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    })
+};
+
+export const getAppointmentsForPhycisian = async (ssn: string): Promise<AppointmentExtended[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/physicians/" + ssn + "/appointemnts/"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    })
+};
+export const getPatientsForPhycisian = async (ssn: string): Promise<Patient[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/physicians/" + ssn + "/patients/"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    })
+};
+
+export const getAppointmentsForPatient = async (ssn: string): Promise<AppointmentExtended[]> => {
+    return new Promise((resolve) => {
+        fetch(bindRoute("/patient/" + ssn + "/appointments/"))
+            .then((res) => res.text())
+            .then((text) => resolve(JSON.parse(text)))
+    })
+};
+
+
 
 export const updatePhysician = async (ssn: string, field: string, value: string): Promise<boolean> => {
     return new Promise((resolve) => {
@@ -113,6 +161,10 @@ export const bookAppointment = async (appointment: Appointment): Promise<boolean
 const useApi = () => ({
     getPatients,
     getPhysicians,
+    getAppointmentsForPhycisian,
+    getPatientsForPhycisian,
+    getProceduresForPatient,
+    getAppointmentsForPatient,
     updatePhysician,
     updatePatient
 });
