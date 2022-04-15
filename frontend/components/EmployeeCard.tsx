@@ -20,9 +20,10 @@ const EmployeeCard = (props: EmployeeCardProps) => {
          <Box w="100%">
             <Field name="Employee Id">{employee.employeeid}</Field>
             <Field name="Name">{employee.firstname} {employee.middlename} {employee.lastname}</Field>
-            <Field name="Role">{employee.emprole}</Field>
+            <Field name="Role">{`${employee.emprole}, ${employee.emptype}`}</Field>
             <Field name="Email">{employee.email}</Field>
             <Field name="Phone">{employee.phonenumber}</Field>
+            <Field name="Branch">{employee.branchid}</Field>
          </Box>
          <Box>
             <Button onClick={() => onEdit(employee)}>Edit</Button>
