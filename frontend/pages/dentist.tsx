@@ -67,6 +67,18 @@ const Dentist: NextPage = () => {
             <Text fontWeight={600}>Phone number</Text>
             <Text>{appointment.phonenumber}</Text>
           </Box>
+          <Box>
+            <Text fontWeight={600}>Date</Text>
+            <Text>{appointment.date}</Text>
+          </Box>
+          <Box>
+            <Text fontWeight={600}>From</Text>
+            <Text>{appointment.starttime}</Text>
+          </Box>
+          <Box>
+            <Text fontWeight={600}>To</Text>
+            <Text>{appointment.endtime}</Text>
+          </Box>
         </Stack>
         <Box>
           <Text fontWeight={600} fontSize="lg">Medical history of {fullName}</Text>
