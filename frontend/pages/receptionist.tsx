@@ -1,6 +1,6 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
-import { Flex, Stack, useDisclosure } from "@chakra-ui/react";
+import { Box, Flex, Select, Stack, Text, useDisclosure } from "@chakra-ui/react";
 import useApi, { Physician } from '../components/hooks/useApi';
 import type { Patient } from '../components/hooks/useApi';
 import React, { useContext, useEffect, useState } from 'react';
@@ -30,6 +30,8 @@ const Receptionist: NextPage = () => {
   employees.sort((e1, e2) => parseInt(e1.employeeid) - parseInt(e2.employeeid));
 
   const [selectedTab, setSelectedTab] = useState<number>(0);
+  const [branches] = useState<string[]>(["100", "200", "300", "400", "500", "600"])
+  const [filteredEmployees, setFilteredEmployees] = useState<Physician[]>([]);
 
   // modal states
 
@@ -74,9 +76,29 @@ const Receptionist: NextPage = () => {
     onEmployeeOpen();
   };
 
-  const employeesTab = employees.map((employee, index) => (
-    <EmployeeCard employee={employee} key={index} onEdit={employee => openEditEmployeeModal(employee)} />
-  ));
+  const handleOnChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const selectedBranch = e.target.value;
+    if (selectedBranch.trim() === "" || selectedBranch === undefined) {
+      setFilteredEmployees(employees);
+    } else {
+      let filteredEmployees = employees.filter(employee => employee.branchid.toString() === selectedBranch);
+      setFilteredEmployees(filteredEmployees);
+    }
+  }
+
+  const employeesTab = (
+    <Box>
+      <Stack direction="column" spacing="1.25rem">
+        <Stack direction="row" spacing="1.25rem">
+          <Text>Filter by branch: </Text>
+          <Select placeholder="All Branches" onChange={handleOnChange}>
+            {branches.map((branchNo, index) => <option value={branchNo} key={`branch-no-${index}`}>{`Branch no. ${branchNo}`}</option>)}
+          </Select>
+        </Stack>
+        {filteredEmployees.map((employee, index) => <EmployeeCard employee={employee} key={index} onEdit={employee => openEditEmployeeModal(employee)} />)}
+      </Stack> 
+    </Box>
+  )
 
   const updateEmployees = (employee: Physician) => {
     const index = employees.findIndex(e => e.ssn === employee.ssn);
@@ -99,6 +121,7 @@ const Receptionist: NextPage = () => {
       const fetchEmployees = async () => {
         const employeesList = await getPhysicians();
         setEmployees(employeesList);
+        setFilteredEmployees(employeesList);
       };
 
       fetchEmployees();
@@ -122,7 +145,7 @@ const Receptionist: NextPage = () => {
           }}
           selectedTab={selectedTab}
           menuPanelButtons={["Patients", "Employees", "Logout"]}
-          titles={["List of all employees", "List of all patients"]}
+          titles={["List of all patients", "List of all employees"]}
         >
           <Stack spacing="1rem">
             {selectedTab === ReceptionistTabs.Patients && patientsTab}

@@ -147,6 +147,21 @@ app.post('/patient/', (req, httpRes) => {
     client.query('INSERT INTO Patient VALUES ($1, $2, $3);', [payload.patientid, payload.ssn, payload.balance], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
 })
 
+/**
+ * Add new patient (hened)
+ */
+app.post('/employee/', (req, httpRes) => {
+    payload = req.body
+    client.query('INSERT INTO Employee VALUES ($1, $2, $3, $4, $5, $6);', [payload.employeeid, payload.ssn, payload.salary, payload.emprole, payload.emptype, payload.branchid], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
+/**
+ * select all employees
+ */
+app.get('/employee/', (req, httpRes) => { 
+    client.query('SELECT * FROM Employee;', [], (err, res) => { handleBasicQueryResponse(httpRes, err, res) })
+})
+
 /* 
     select all the Procedures of a Patient
 */
