@@ -1,5 +1,12 @@
 # CSI2132 Database Project
 
+Note: this project was not completed. However, we implemented the necessary features for the database course. There are no good use cases for now. But feel free to try it out anyway at https://project.sebgrd.dev/ .
+
+Project components:
+ - Frontend: Typescript + React
+ - Backend: And API layer in javascript+node for the frontend to interract with the database
+ - Database: Postgres database
+
 ## Getting Started
 
 1. Download Docker Desktop https://www.docker.com/products/docker-desktop
